@@ -1,21 +1,10 @@
-FROM python:3.9-slim
+FROM ghcr.io/rhasspy/piper:latest
 
-# Устанавливаем системные зависимости
-RUN apt-get update && apt-get install -y \
-    wget \
-    ffmpeg \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
-# Обновляем pip и устанавливаем Piper
-RUN python3 -m pip install --upgrade pip
-RUN pip install --no-cache-dir piper-tts piper
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
 
-# Копируем скрипт запуска
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
-
-# Открываем порт для общения с сервером
 EXPOSE 8080
 
-# Запуск сервера
-CMD ["/start.sh"]
+CMD ["/app/start.sh"]
